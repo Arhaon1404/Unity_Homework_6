@@ -2,19 +2,43 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(SpriteRenderer))]
+
 public class AutomaticEnemyMovement : MonoBehaviour
 {
     [SerializeField] private float _speed;
+    private SpriteRenderer _spriteRenderer;
 
-    // Start is called before the first frame update
+    private float _direction = -1f;
+    private bool _isLeft = true;
+
     void Start()
     {
-        
+        _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        transform.Translate(_speed * Time.deltaTime,0,0);
+        transform.Translate(_speed * (Time.deltaTime * _direction),0,0);
+    }
+
+    public void ChangeDirection()
+    {
+        if (_isLeft == true)
+        {
+            _direction = 1f;
+
+            _spriteRenderer.flipX = true;
+
+            _isLeft = false;
+        }
+        else
+        {
+            _direction = -1f;
+
+            _spriteRenderer.flipX = false;
+
+            _isLeft = true;
+        }
     }
 }

@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class SpawnEnemy : MonoBehaviour
 {
-    public GameObject SpawnableObject;
-    public GameObject[] Spawners;
+    [SerializeField] private Enemy _spawnableObject;
+    [SerializeField] private Spawner[] Spawners;
 
     private Coroutine _spawnEnemyCoroutine;
     private int _randomPosition;
     private float _spawnSecondsPeriod = 2f;
     private bool _isDone = true;
 
-    void Update()
+    private void Update()
     {
         RunCoroutine();
     }
@@ -23,7 +23,7 @@ public class SpawnEnemy : MonoBehaviour
 
         _randomPosition = Random.Range(0, Spawners.Length);
 
-        Instantiate(SpawnableObject, Spawners[_randomPosition].transform.position, Quaternion.identity);
+        Instantiate(_spawnableObject, Spawners[_randomPosition].transform.position, Quaternion.identity);
 
         _isDone = true; 
     }

@@ -12,12 +12,12 @@ public class AutomaticEnemyMovement : MonoBehaviour
     private float _direction = -1f;
     private bool _isLeft = true;
 
-    void Start()
+    private void Start()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    void Update()
+    private void Update()
     {
         transform.Translate(_speed * (Time.deltaTime * _direction),0,0);
     }

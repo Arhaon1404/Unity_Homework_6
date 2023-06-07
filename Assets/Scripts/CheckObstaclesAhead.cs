@@ -8,11 +8,9 @@ public class CheckObstaclesAhead : MonoBehaviour
 {
     [SerializeField] private UnityEvent _touched;
 
-    private const string _wall = "Wall";
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == _wall) 
+        if (collision.collider.TryGetComponent(out Wall wall)) 
         {
             _touched.Invoke();
         }

@@ -4,28 +4,40 @@ using UnityEngine;
 
 public class SpawnEnemy : MonoBehaviour
 {
+    [SerializeField] private Target _target;
     [SerializeField] private Enemy _spawnableObject;
-    [SerializeField] private Spawner[] Spawners;
+    [SerializeField] private float _spawnSecondsPeriod;
+    [SerializeField] private int _spawnCount;
 
+    private Enemy _newObject;
     private Coroutine _spawnEnemyCoroutine;
-    private int _randomPosition;
-    private float _spawnSecondsPeriod = 2f;
     private bool _isDone = true;
+    private int _counter;
+
+    private void Start()
+    {
+        _counter = 0;
+    }
 
     private void Update()
     {
-        RunCoroutine();
+        if (_counter < _spawnCount)
+        {
+            RunCoroutine();
+        }
     }
 
     private IEnumerator SpawnObject()
     {
         yield return new WaitForSeconds(_spawnSecondsPeriod);
 
-        _randomPosition = Random.Range(0, Spawners.Length);
+        _newObject = Instantiate(_spawnableObject, transform.position, Quaternion.identity);
 
-        Instantiate(_spawnableObject, Spawners[_randomPosition].transform.position, Quaternion.identity);
+        _newObject.GetComponent<Enemy>().GetTarget(_target);
 
-        _isDone = true; 
+        _isDone = true;
+
+        _counter++;
     }
 
     private void RunCoroutine()

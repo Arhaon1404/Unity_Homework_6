@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
@@ -13,42 +12,40 @@ public class EnemyJump : MonoBehaviour
     private Animator _animator;
     private Coroutine _jumpCoroutine;
     private SpriteRenderer _spriteRenderer;
-    private Vector3 _target;
+    private Vector3 _direction;
 
     private bool _isDone = true;
     private string _jumpAnimation = "isJump";
     private string _fallAnimation = "isFall";
+    private float _randomJumpForceValue;
 
     private void Start()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _rigidbody = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
+        _randomJumpForceValue = Random.Range(-3f, 3f);
     }
 
     private void Update()
     {
-        float currentPositionX = transform.position.x;
-        float currentPositionY = transform.position.y;
-
-        _target = transform.GetComponent<Enemy>().target.transform.position;
+        _direction = transform.GetComponent<Enemy>().target.transform.position - transform.position;
+        _direction.Normalize();
 
         RunCoroutine();
 
-        ChangeDirectionOfView(currentPositionX);
-        ChangeJumpAnimation(currentPositionY);
+        ChangeDirectionOfView(_direction.x);
+        ChangeJumpAnimation(_rigidbody.velocity.y);
     }
 
-    private void ChangeJumpAnimation(float currentPositionY)
+    private void ChangeJumpAnimation(float velocityY)
     {
-        float changedPositionY = transform.position.y;
-
-        if (currentPositionY < changedPositionY)
+        if (velocityY > 0)
         {
             _animator.SetBool(_jumpAnimation,true);
             _animator.SetBool(_fallAnimation,false);
         }
-        else if (currentPositionY > changedPositionY)
+        else if (velocityY < 0)
         {
             _animator.SetBool(_jumpAnimation, false);
             _animator.SetBool(_fallAnimation, true);
@@ -60,29 +57,24 @@ public class EnemyJump : MonoBehaviour
         }
     }
 
-    private void ChangeDirectionOfView(float currentPositionX)
+    private void ChangeDirectionOfView(float velocityX)
     {
-        float changedPositionX = transform.position.x;
-
-        if (currentPositionX < changedPositionX)
+        switch (velocityX)
         {
-            _spriteRenderer.flipX = true;
-        }
-        else
-        {
-            _spriteRenderer.flipX = false;
+            case > 0:
+                _spriteRenderer.flipX = true;
+                break;
+            case < 0:
+                _spriteRenderer.flipX = false;
+                break;
         }
     }
 
     private IEnumerator Jump()
     {
+        _rigidbody.AddForce(_direction * (_jumpForce + _randomJumpForceValue), ForceMode2D.Impulse);
+
         yield return new WaitForSeconds(_jumpDelay);
-
-        Vector3 targetVector = _target - transform.position;
-
-        targetVector = targetVector.normalized * _jumpForce;
-
-        _rigidbody.AddForce(targetVector, ForceMode2D.Impulse);
 
         _isDone = true;
     }

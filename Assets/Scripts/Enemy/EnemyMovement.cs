@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
@@ -20,26 +18,26 @@ public class EnemyMovement : MonoBehaviour
 
     private void Update()
     {
-        float currentPositionX = transform.position.x;
-
         Vector3 target = transform.GetComponent<Enemy>().target.transform.position;
+
+        var direction = target - transform.position;
+        direction.Normalize();
 
         transform.position = Vector3.MoveTowards(transform.position, target, (_speed + _randomSpeedValue) * Time.deltaTime);
 
-        ChangeMoveAnimation(currentPositionX);
+        ChangeMoveAnimation(direction.x);
     }
 
-    private void ChangeMoveAnimation(float currentPositionX)
+    private void ChangeMoveAnimation(float velocity)
     {
-        float changedPositionX = transform.position.x;
-
-        if (currentPositionX < changedPositionX)
+        switch (velocity)
         {
-            _spriteRenderer.flipX = true;
-        }
-        else
-        {
-            _spriteRenderer.flipX = false;
+            case > 0:
+                _spriteRenderer.flipX = true;
+                break;
+            case < 0:
+                _spriteRenderer.flipX = false;
+                break;
         }
     }
 }

@@ -2,6 +2,8 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Animator))]
 
 public class EnemyJump : MonoBehaviour
 {
@@ -72,11 +74,14 @@ public class EnemyJump : MonoBehaviour
 
     private IEnumerator Jump()
     {
-        _rigidbody.AddForce(_direction * (_jumpForce + _randomJumpForceValue), ForceMode2D.Impulse);
+        while (true)
+        {
+            _rigidbody.AddForce(_direction * (_jumpForce + _randomJumpForceValue), ForceMode2D.Impulse);
 
-        yield return new WaitForSeconds(_jumpDelay);
+            yield return new WaitForSeconds(_jumpDelay);
 
-        _isDone = true;
+            _isDone = true;
+        }
     }
 
     private void RunCoroutine()

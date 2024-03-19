@@ -11,16 +11,16 @@ public class SpawnEnemy : MonoBehaviour
     private Enemy _newObject;
     private Coroutine _spawnEnemyCoroutine;
     private bool _isDone = true;
-    private int _counter;
+    private int _count;
 
     private void Start()
     {
-        _counter = 0;
+        _count = 0;
     }
 
     private void Update()
     {
-        if (_counter < _spawnCount)
+        if (_count < _spawnCount)
         {
             RunCoroutine();
         }
@@ -32,22 +32,22 @@ public class SpawnEnemy : MonoBehaviour
 
         _newObject = Instantiate(_spawnableObject, transform.position, Quaternion.identity);
 
-        _newObject.GetComponent<Enemy>().GetTarget(_target);
+        _newObject.SetTarget(_target);
 
         _isDone = true;
 
-        _counter++;
+        _count++;
     }
 
     private void RunCoroutine()
     {
-        if (_spawnEnemyCoroutine != null & _isDone == true)
-        {
-            StopCoroutine(_spawnEnemyCoroutine);
-        }
-
         if (_isDone == true)
         {
+            if (_spawnEnemyCoroutine != null)
+            {
+                StopCoroutine(_spawnEnemyCoroutine);
+            }
+
             _isDone = false;
             _spawnEnemyCoroutine = StartCoroutine(SpawnObject());
         }

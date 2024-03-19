@@ -2,20 +2,28 @@ using UnityEngine;
 
 public class RouteMover : MonoBehaviour
 {
-    [SerializeField] private Target _movebleObject;
     [SerializeField] private TargetRoute _targetRoute;
     [SerializeField] private float _speed;
 
     private Vector3 _targetRouteCoordinate;
-    private int _counter;
+    private Vector3[] _targetRouteArray;
+
+    private int _count;
 
     private void Start()
     {
-        _counter = 0;
+        _targetRouteArray = new Vector3[_targetRoute.transform.childCount];
 
-        if (_targetRoute.transform.GetChild(_counter) != null)
+        for (int i = 0;i < _targetRoute.transform.childCount;i++)
         {
-            _targetRouteCoordinate = _targetRoute.transform.GetChild(_counter).transform.position;
+            _targetRouteArray[i] = _targetRoute.transform.GetChild(i).transform.position;
+        }
+
+        _count = 0;
+
+        if (_targetRouteArray[_count] != null)
+        {
+            _targetRouteCoordinate = _targetRouteArray[_count];
         }
     }
 
@@ -28,20 +36,9 @@ public class RouteMover : MonoBehaviour
 
     private void CheckDistance()
     {
-        if (Vector3.Distance(transform.position, _targetRouteCoordinate) <= 0)
+        if (Vector3.Distance(transform.position, _targetRouteCoordinate) == 0)
         {
-            int arrayCounter = _counter + 1;
-
-            if (arrayCounter < _targetRoute.transform.childCount)
-            {
-                _targetRouteCoordinate = _targetRoute.transform.GetChild(_counter).transform.position;
-                _counter++;
-            }
-            else
-            {
-                _targetRouteCoordinate = _targetRoute.transform.GetChild(_counter).transform.position;
-                _counter = 0;
-            }
+            _targetRouteCoordinate = _targetRouteArray[_count++ % _targetRouteArray.Length];
         }
     }
 }

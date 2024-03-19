@@ -1,11 +1,10 @@
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Animator))]
 
-public class EnemyJump : MonoBehaviour
+public class AutomaticJump : DirectionTowarder
 {
     [SerializeField] private float _jumpForce;
     [SerializeField] private float _jumpDelay;
@@ -13,30 +12,27 @@ public class EnemyJump : MonoBehaviour
     private Rigidbody2D _rigidbody;
     private Animator _animator;
     private Coroutine _jumpCoroutine;
-    private SpriteRenderer _spriteRenderer;
-    private Vector3 _direction;
 
     private bool _isDone = true;
     private string _jumpAnimation = "isJump";
     private string _fallAnimation = "isFall";
     private float _randomJumpForceValue;
 
-    private void Start()
+    protected override void Start()
     {
-        _spriteRenderer = GetComponent<SpriteRenderer>();
+        base.Start();
+
         _rigidbody = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _randomJumpForceValue = Random.Range(-3f, 3f);
     }
 
-    private void Update()
+    protected override void Update()
     {
-        _direction = transform.GetComponent<Enemy>().target.transform.position - transform.position;
-        _direction.Normalize();
-
         RunCoroutine();
 
-        ChangeDirectionOfView(_direction.x);
+        base.Update();
+
         ChangeJumpAnimation(_rigidbody.velocity.y);
     }
 
@@ -59,24 +55,11 @@ public class EnemyJump : MonoBehaviour
         }
     }
 
-    private void ChangeDirectionOfView(float velocityX)
-    {
-        switch (velocityX)
-        {
-            case > 0:
-                _spriteRenderer.flipX = true;
-                break;
-            case < 0:
-                _spriteRenderer.flipX = false;
-                break;
-        }
-    }
-
     private IEnumerator Jump()
     {
         while (true)
         {
-            _rigidbody.AddForce(_direction * (_jumpForce + _randomJumpForceValue), ForceMode2D.Impulse);
+            _rigidbody.AddForce(Direction * (_jumpForce + _randomJumpForceValue), ForceMode2D.Impulse);
 
             yield return new WaitForSeconds(_jumpDelay);
 
@@ -86,13 +69,13 @@ public class EnemyJump : MonoBehaviour
 
     private void RunCoroutine()
     {
-        if (_jumpCoroutine != null & _isDone == true)
-        {
-            StopCoroutine(_jumpCoroutine);
-        }
-
         if (_isDone == true)
         {
+            if (_jumpCoroutine != null)
+            {
+                StopCoroutine(_jumpCoroutine);
+            }
+
             _isDone = false;
             _jumpCoroutine = StartCoroutine(Jump());
         }

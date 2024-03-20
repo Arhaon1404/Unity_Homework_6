@@ -5,38 +5,33 @@ public class SpawnEnemy : MonoBehaviour
 {
     [SerializeField] private Target _target;
     [SerializeField] private Enemy _spawnableObject;
-    [SerializeField] private float _spawnSecondsPeriod;
+    [SerializeField] private float _spawnSecondsDelay;
     [SerializeField] private int _spawnCount;
 
     private Enemy _newObject;
     private Coroutine _spawnEnemyCoroutine;
+    private WaitForSeconds _spawnDelay;
     private bool _isDone = true;
-    private int _count;
 
     private void Start()
     {
-        _count = 0;
-    }
+        _spawnDelay = new WaitForSeconds(_spawnCount);
 
-    private void Update()
-    {
-        if (_count < _spawnCount)
-        {
-            RunCoroutine();
-        }
+        RunCoroutine();
     }
 
     private IEnumerator SpawnObject()
     {
-        yield return new WaitForSeconds(_spawnSecondsPeriod);
+        for (int i = 0; i < _spawnCount; i++)
+        {
+            yield return _spawnDelay;
 
-        _newObject = Instantiate(_spawnableObject, transform.position, Quaternion.identity);
+            _newObject = Instantiate(_spawnableObject, transform.position, Quaternion.identity);
 
-        _newObject.SetTarget(_target);
+            _newObject.SetTarget(_target);
+        }
 
         _isDone = true;
-
-        _count++;
     }
 
     private void RunCoroutine()

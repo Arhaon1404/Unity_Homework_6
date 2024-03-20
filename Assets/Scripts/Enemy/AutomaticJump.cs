@@ -7,16 +7,17 @@ using UnityEngine;
 public class AutomaticJump : DirectionTowarder
 {
     [SerializeField] private float _jumpForce;
-    [SerializeField] private float _jumpDelay;
+    [SerializeField] private float _delay;
 
     private Rigidbody2D _rigidbody;
     private Animator _animator;
     private Coroutine _jumpCoroutine;
+    private WaitForSeconds _jumpDelay;
 
     private bool _isDone = true;
     private string _jumpAnimation = "isJump";
     private string _fallAnimation = "isFall";
-    private float _randomJumpForceValue;
+    private float _randomJumpValue;
 
     protected override void Start()
     {
@@ -24,13 +25,14 @@ public class AutomaticJump : DirectionTowarder
 
         _rigidbody = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
-        _randomJumpForceValue = Random.Range(-3f, 3f);
+        _randomJumpValue = Random.Range(-3f, 3f);
+        _jumpDelay = new WaitForSeconds(_delay + _randomJumpValue);
+
+        RunCoroutine();
     }
 
     protected override void Update()
     {
-        RunCoroutine();
-
         base.Update();
 
         ChangeJumpAnimation(_rigidbody.velocity.y);
@@ -59,9 +61,9 @@ public class AutomaticJump : DirectionTowarder
     {
         while (true)
         {
-            _rigidbody.AddForce(Direction * (_jumpForce + _randomJumpForceValue), ForceMode2D.Impulse);
+            _rigidbody.AddForce(Direction * (_jumpForce + _randomJumpValue), ForceMode2D.Impulse);
 
-            yield return new WaitForSeconds(_jumpDelay);
+            yield return _jumpDelay;
 
             _isDone = true;
         }

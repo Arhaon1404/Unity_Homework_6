@@ -26,6 +26,6 @@ public class DirectionTowarder : MonoBehaviour
         Direction = EnemyTarget.Target.transform.position - transform.position;
         Direction.Normalize();
 
-        _spriteRenderer.flipX = Direction.x > 0f ? true : false;
+        _spriteRenderer.flipX = Direction.x > 0f;
     }
 }

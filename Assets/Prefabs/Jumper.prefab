@@ -135,7 +135,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _jumpForce: 15
-  _jumpDelay: 5
+  _delay: 5
 --- !u!50 &1550565729021632277
 Rigidbody2D:
   serializedVersion: 4

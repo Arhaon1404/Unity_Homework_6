@@ -3311,7 +3311,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _target: {fileID: 1689046918}
   _spawnableObject: {fileID: 5670890299916125992, guid: 3f5d19b98ab954141829fa9d7319daaa, type: 3}
-  _spawnSecondsPeriod: 5
+  _spawnSecondsDelay: 0
   _spawnCount: 3
 --- !u!212 &1533172132
 SpriteRenderer:
@@ -3412,7 +3412,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _target: {fileID: 1083774532}
   _spawnableObject: {fileID: 3031262865209764126, guid: 54927a3922d1d27428036f8f4a8e0720, type: 3}
-  _spawnSecondsPeriod: 5
+  _spawnSecondsDelay: 0
   _spawnCount: 3
 --- !u!212 &1595848709
 SpriteRenderer:
@@ -3555,7 +3555,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _target: {fileID: 1508413181}
   _spawnableObject: {fileID: 2489661683367689363, guid: 135c4547f30ff594b9d72028b2f0500d, type: 3}
-  _spawnSecondsPeriod: 5
+  _spawnSecondsDelay: 0
   _spawnCount: 3
 --- !u!212 &1990982625
 SpriteRenderer:
